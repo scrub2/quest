@@ -55,9 +55,9 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
 })
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.BOSS, function (sprite, otherSprite) {
     if (_type == 1) {
-        statusbar.value += -0.1
+        statusbar.value += -0.3
     } else if (_type == 2) {
-        statusbar.value += -0.5
+        statusbar.value += -0.1
     } else if (_type == 3) {
         statusbar.value += -5
     }
