@@ -57,9 +57,9 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.BOSS, function (sprite, othe
     if (_type == 1) {
         statusbar.value += -0.3
     } else if (_type == 2) {
-        statusbar.value += -0.1
+        statusbar.value += -1
     } else if (_type == 3) {
-        statusbar.value += -5
+        statusbar.value += -1.8
     }
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -2690,7 +2690,7 @@ sprites.onOverlap(SpriteKind.shiel, SpriteKind.Bossprojectile, function (sprite,
 statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
     Dragon.startEffect(effects.disintegrate)
     Dragon.destroy()
-    game.splash("You defeated the Dragon congrats!")
+    game.splash("You defeated the Dragon!")
     game.over(true)
 })
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Staff, function (sprite, otherSprite) {
