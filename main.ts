@@ -6,6 +6,7 @@ namespace SpriteKind {
     export const BOmb = SpriteKind.create()
     export const BOSS = SpriteKind.create()
     export const Bossprojectile = SpriteKind.create()
+    export const shiel = SpriteKind.create()
 }
 sprites.onOverlap(SpriteKind.EnemyProjectile, SpriteKind.Player, function (sprite, otherSprite) {
     otherSprite.startEffect(effects.fountain)
@@ -13,8 +14,8 @@ sprites.onOverlap(SpriteKind.EnemyProjectile, SpriteKind.Player, function (sprit
     game.over(false)
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (shield_bar.value > 0) {
-        if (_type != 1) {
+    if (_type != 1) {
+        if (shield_bar.value > 0) {
             sheild = sprites.create(img`
                 ................
                 ................
@@ -46,7 +47,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
                 ................
                 ................
                 ................
-                `, SpriteKind.Player)
+                `, SpriteKind.shiel)
             sheild.setPosition(monsterfrontx() + 20, monsterfromty())
             controller.moveSprite(sheild, 72, 72)
         }
@@ -2682,6 +2683,10 @@ sprites.onOverlap(SpriteKind.BOmb, SpriteKind.Player, function (sprite, otherSpr
     otherSprite.destroy()
     game.over(false)
 })
+sprites.onOverlap(SpriteKind.shiel, SpriteKind.Bossprojectile, function (sprite, otherSprite) {
+    otherSprite.startEffect(effects.fountain)
+    otherSprite.destroy()
+})
 statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
     Dragon.startEffect(effects.disintegrate)
     Dragon.destroy()
@@ -2867,8 +2872,14 @@ sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSp
     otherSprite.destroy()
     game.over(false)
 })
+sprites.onOverlap(SpriteKind.shiel, SpriteKind.EnemyProjectile, function (sprite, otherSprite) {
+    otherSprite.startEffect(effects.fountain)
+    otherSprite.destroy()
+})
 controller.B.onEvent(ControllerButtonEvent.Released, function () {
-    sheild.destroy()
+    if (_type != 1) {
+        sheild.destroy()
+    }
 })
 function monsterfrontx () {
     if (_type == 1) {
@@ -3063,10 +3074,12 @@ function gameStart () {
     effects.blizzard.startScreenEffect()
     tiles.setTilemap(tilemap`level1`)
     start += 1
-    shield_bar = statusbars.create(60, 6, StatusBarKind.Magic)
-    shield_bar.setBarBorder(1, 15)
-    shield_bar.setPosition(40, 10)
-    shield_bar.setColor(9, 8)
+    if (_type != 1) {
+        shield_bar = statusbars.create(60, 6, StatusBarKind.Magic)
+        shield_bar.setBarBorder(1, 15)
+        shield_bar.setPosition(40, 10)
+        shield_bar.setColor(9, 8)
+    }
 }
 sprites.onOverlap(SpriteKind.Bossprojectile, SpriteKind.Player, function (sprite, otherSprite) {
     otherSprite.startEffect(effects.fountain)
@@ -3612,8 +3625,8 @@ let Uparrow: Sprite = null
 let Click: Sprite = null
 let statusbar: StatusBarSprite = null
 let sheild: Sprite = null
-let _type = 0
 let shield_bar: StatusBarSprite = null
+let _type = 0
 let bosscounter = 0
 let Cursor: Sprite = null
 let Sword2: Sprite = null
@@ -3969,7 +3982,7 @@ Cursor = sprites.create(img`
 Bow.setPosition(30, 60)
 Sword2.setPosition(128, 60)
 Cursor.setBounceOnWall(true)
-game.showLongText("Choose a class using the cursor.", DialogLayout.Bottom)
+game.showLongText("Choose a class using the cursor. WASD - movement A - shoot B - shield  * only some classes", DialogLayout.Bottom)
 let Goblin_Alive = 0
 let SqueebAlive = 0
 let Water_Alive = 0
@@ -4053,6 +4066,13 @@ Cursor,
 true
 )
 controller.moveSprite(Cursor, 100, 100)
+game.onUpdateInterval(50, function () {
+    if (controller.B.isPressed()) {
+        if (_type != 1) {
+            shield_bar.value += -3
+        }
+    }
+})
 game.onUpdateInterval(2000, function () {
     if (bossalive == 1) {
         bossattacdk = randint(1, 3)
@@ -4292,11 +4312,6 @@ game.onUpdateInterval(1000, function () {
 forever(function () {
     if (start == 1) {
         scene.centerCameraAt(monsterfrontx() + 60, monsterfromty())
-    }
-})
-game.onUpdateInterval(100, function () {
-    if (controller.B.isPressed()) {
-        shield_bar.value += -1
     }
 })
 game.onUpdateInterval(200, function () {
